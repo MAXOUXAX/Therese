@@ -30,9 +30,9 @@ public class Logger {
 
     public void log(Level level, String str, boolean sendConsoleMessage){
         String date = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        if(sendConsoleMessage)System.out.println("("+date+")"+" | BouloBOT > ["+level.getName()+"] "+str);
+        if(sendConsoleMessage)System.out.println("("+date+")"+" | Thérèse > ["+level.getName()+"] "+str);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, true))) {
-            bw.write("("+date+")"+" | BouloBOT > ["+level.getName()+"] "+str+"\n");
+            bw.write("("+date+")"+" | Thérèse > ["+level.getName()+"] "+str+"\n");
         } catch (IOException e) {
             therese.getErrorHandler().handleException(e);
         }

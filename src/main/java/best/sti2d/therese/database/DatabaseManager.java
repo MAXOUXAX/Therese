@@ -10,12 +10,13 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 
 public class DatabaseManager {
 
     public static DatabaseAccess databaseAccess;
 
-    public static void initDatabaseConnection() throws Exception {
+    public static void initDatabaseConnection() throws SQLException {
         DatabaseCredentials databaseCredentials;
         try(final Reader reader = Files.newBufferedReader(Paths.get("database.yml"), StandardCharsets.UTF_8)) {
             Yaml yaml = new Yaml(new CustomClassLoaderConstructor(ClassLoader.getSystemClassLoader()));
@@ -23,7 +24,7 @@ public class DatabaseManager {
 
             databaseCredentials = yaml.loadAs(reader, DatabaseCredentials.class);
             if(databaseCredentials.getHost().equalsIgnoreCase("none")){
-                throw new Exception("Database is not configured in config.yml");
+                throw new SQLException("Database is not configured in database.yml");
             }
             databaseAccess = new DatabaseAccess(databaseCredentials);
             databaseAccess.initPool();

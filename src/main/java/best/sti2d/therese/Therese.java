@@ -1,7 +1,9 @@
 package best.sti2d.therese;
 
 import best.sti2d.therese.commands.CommandMap;
+import best.sti2d.therese.database.DatabaseManager;
 import best.sti2d.therese.listeners.DiscordListener;
+import best.sti2d.therese.pronote.PronoteManager;
 import best.sti2d.therese.utils.ConfigurationManager;
 import best.sti2d.therese.utils.ErrorHandler;
 import best.sti2d.therese.utils.Logger;
@@ -13,6 +15,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.logging.Level;
 
@@ -24,20 +27,21 @@ public class Therese implements Runnable{
     private final Scanner scanner = new Scanner(System.in);
     private final Logger logger;
     private final ErrorHandler errorHandler;
-
-    private ConfigurationManager configurationManager;
+    private PronoteManager pronoteManager;
+    private final ConfigurationManager configurationManager;
 
     private boolean running;
     private final String version;
 
-    public Therese() throws LoginException, IllegalArgumentException, NullPointerException, IOException, InterruptedException {
+    public Therese() throws LoginException, IllegalArgumentException, NullPointerException, IOException, InterruptedException, SQLException {
         instance = this;
         this.logger = new Logger();
-
         this.errorHandler = new ErrorHandler();
 
+        DatabaseManager.initDatabaseConnection();
+
         String string = new File(Therese.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
-        string = string.replaceAll("BouloBOT-", "")
+        string = string.replaceAll("Therese-", "")
                 .replaceAll("-jar-with-dependencies", "")
                 .replaceAll(".jar", "");
         this.version = string;
@@ -52,10 +56,22 @@ public class Therese implements Runnable{
         logger.log(Level.INFO, "> Libraries loaded! Loading JDA...");
 
         loadDiscord();
-        logger.log(Level.INFO, "> JDA loaded!");
+        logger.log(Level.INFO, "> JDA loaded! Loading Pronote...");
+
+        loadPronote();
+        logger.log(Level.INFO, "> Pronote loaded!");
 
         logger.log(Level.INFO, "> The BOT is now good to go !");
         logger.log(Level.INFO, "--------------- STARTING ---------------");
+    }
+
+    private void loadPronote() {
+        try {
+            this.pronoteManager = new PronoteManager();
+            pronoteManager.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadDiscord() throws LoginException, InterruptedException {
@@ -73,7 +89,7 @@ public class Therese implements Runnable{
                 GatewayIntent.GUILD_VOICE_STATES)
                 .build();
         jda.addEventListener(new DiscordListener(commandMap));
-        jda.getPresence().setActivity(Activity.playing("Amazingly powerful"));
+        jda.getPresence().setActivity(Activity.playing(configurationManager.getStringValue("gameName")));
         jda.awaitReady();
     }
 
@@ -109,6 +125,8 @@ public class Therese implements Runnable{
         logger.log(Level.INFO, "> JDA shutdowned!");
         logger.save();
         logger.log(Level.INFO, "> Logger saved");
+        DatabaseManager.closeDatabaseConnection();
+        logger.log(Level.INFO, "> Closed database connection!");
         logger.log(Level.INFO, "--------------- STOPPING ---------------");
         logger.log(Level.INFO, "Arrêt du BOT réussi");
         System.exit(0);
@@ -117,8 +135,8 @@ public class Therese implements Runnable{
     public static void main(String[] args) {
         try {
             Therese therese = new Therese();
-            new Thread(therese, "bot").start();
-        } catch (LoginException | IllegalArgumentException | NullPointerException | IOException | InterruptedException e) {
+            new Thread(therese, "therese").start();
+        } catch (LoginException | IllegalArgumentException | NullPointerException | IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
         }
     }

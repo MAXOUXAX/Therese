@@ -1,21 +1,20 @@
 package best.sti2d.therese.commands.register.discord;
 
+import best.sti2d.therese.Therese;
+import best.sti2d.therese.commands.Command;
+import best.sti2d.therese.commands.CommandMap;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.maxouxax.boulobot.BOT;
-import net.maxouxax.boulobot.commands.Command;
-import net.maxouxax.boulobot.commands.CommandMap;
-import net.maxouxax.boulobot.util.TextFormatter;
 
 public class CommandEmbed {
 
-    private final BOT bot;
+    private final Therese therese;
     private final CommandMap commandMap;
 
     public CommandEmbed(CommandMap commandMap){
         this.commandMap = commandMap;
-        this.bot = BOT.getInstance();
+        this.therese = Therese.getInstance();
     }
 
     @Command(name="embed",type = Command.ExecutorType.ALL,power = 100,help = ".embed <titre>-²<description>-²<image (url)>",example = ".embed Ceci est une annonce-²Juste pour vous dire que les bananes c'est assez bon mais que la raclette reste au dessus.-²https://lien-de-l-image.fr/image32.png")
@@ -52,7 +51,7 @@ public class CommandEmbed {
 
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.setTitle(title, "https://twitch.lyorine.com");
-                embedBuilder.setFooter(TextFormatter.asDate(bot.getConfigurationManager().getStringValue("embedFooter")), bot.getConfigurationManager().getStringValue("embedIconUrl"));
+                embedBuilder.setFooter(therese.getConfigurationManager().getStringValue("embedFooter"), therese.getConfigurationManager().getStringValue("embedIconUrl"));
                 embedBuilder.setColor(15844367);
                 embedBuilder.setDescription(description);
                 if (imageURL != null) {
@@ -61,7 +60,7 @@ public class CommandEmbed {
                 textChannel.sendMessage(embedBuilder.build()).queue();
             }
         }catch (Exception e){
-            bot.getErrorHandler().handleException(e);
+            therese.getErrorHandler().handleException(e);
         }
     }
 

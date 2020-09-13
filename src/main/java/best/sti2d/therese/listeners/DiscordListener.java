@@ -2,8 +2,8 @@ package best.sti2d.therese.listeners;
 
 import best.sti2d.therese.Therese;
 import best.sti2d.therese.commands.CommandMap;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import best.sti2d.therese.utils.EmbedCrafter;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -57,13 +57,12 @@ public class DiscordListener implements EventListener {
 
     private void onDM(PrivateMessageReceivedEvent event){
         if(event.getAuthor().equals(event.getJDA().getSelfUser())) return;
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.RED);
-        embedBuilder.setTitle("Private message received of " + event.getAuthor().getName());
-        embedBuilder.setThumbnail(bot.getConfigurationManager().getStringValue("cancelIcon"));
-        embedBuilder.setDescription("Cette action est **IMPOSSIBLE**");
-        embedBuilder.setFooter(bot.getConfigurationManager().getStringValue("embedFooter"), bot.getConfigurationManager().getStringValue("embedIconUrl"));
-        event.getChannel().sendMessage(embedBuilder.build()).queue();
+        EmbedCrafter embedCrafter = new EmbedCrafter();
+        embedCrafter.setColor(Color.RED.getRGB());
+        embedCrafter.setTitle("Private message received of " + event.getAuthor().getName());
+        embedCrafter.setThumbnailUrl(therese.getConfigurationManager().getStringValue("cancelIcon"));
+        embedCrafter.setDescription("Cette action est **IMPOSSIBLE**");
+        event.getChannel().sendMessage(embedCrafter.build().build()).queue();
     }
 
 }

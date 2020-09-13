@@ -158,7 +158,7 @@ public class CommandDefault {
         textChannel.sendMessage(builder.build()).queue();
     }
 
-    @Command(name = "sendrules", description = "Permet d'envoyer les règles dans le salon destiné.", type = ExecutorType.CONSOLE)
+    @Command(name = "sendrules", description = "Permet d'envoyer les règles dans le salon destiné.", type = Command.ExecutorType.CONSOLE)
     private void sendRules(){
         EmbedBuilder embedBuilder1 = new EmbedBuilder()
                 .setImage(therese.getConfigurationManager().getStringValue("rulesBanner")+"?size=1000")

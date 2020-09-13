@@ -1,6 +1,10 @@
 package best.sti2d.therese.commands;
 
 import best.sti2d.therese.Therese;
+import best.sti2d.therese.commands.register.discord.CommandDefault;
+import best.sti2d.therese.commands.register.discord.CommandEmbed;
+import best.sti2d.therese.commands.register.discord.CommandVersion;
+import best.sti2d.therese.commands.register.discord.HelpCommand;
 import best.sti2d.therese.database.DatabaseManager;
 import best.sti2d.therese.utils.EmbedCrafter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -8,21 +12,17 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.Map.Entry;
+import java.sql.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 public final class CommandMap {
 
-    private Therese therese;
+    private final Therese therese;
 
     private final Map<Long, Integer> powers = new HashMap<>();
 
@@ -31,7 +31,7 @@ public final class CommandMap {
 
     public CommandMap() {
         this.therese = Therese.getInstance();
-        registerCommands();
+        registerCommands(new CommandDefault(this), new CommandEmbed(this), new CommandVersion(this), new HelpCommand(this));
         loadPower();
     }
 

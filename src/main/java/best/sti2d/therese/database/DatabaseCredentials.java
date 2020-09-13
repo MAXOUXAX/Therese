@@ -8,14 +8,6 @@ public class DatabaseCredentials {
     private String databaseName;
     private int port;
 
-    public DatabaseCredentials(String host, String user, String password, String databaseName, int port) {
-        this.host = host;
-        this.user = user;
-        this.password = password;
-        this.databaseName = databaseName;
-        this.port = port;
-    }
-
     public String toURI(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("jdbc:mysql://")
@@ -45,5 +37,25 @@ public class DatabaseCredentials {
 
     public int getPort() {
         return port;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }
