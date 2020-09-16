@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.*;
 
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -84,7 +85,12 @@ public class CommandDefault {
 
     @Command(name = "info",description = "Permet d'obtenir des informations sur un membre",type = Command.ExecutorType.USER, help = "info <@user>", example = "info @MAXOUXAX#2233")
     private void info(User user, Guild guild, TextChannel textChannel, String[] args, Message message) {
-        User infoUser = message.getMentionedUsers().get(0);
+        User infoUser;
+        if(message.getMentionedUsers().size() > 0){
+            infoUser = message.getMentionedUsers().get(0);
+        }else{
+            infoUser = user;
+        }
 
         String name = infoUser.getName();
         String tag = infoUser.getName() + "#" + infoUser.getDiscriminator();
@@ -101,25 +107,28 @@ public class CommandDefault {
                 guildJoinDate = infoMember.getTimeJoined().format(DateTimeFormatter.RFC_1123_DATE_TIME);
                 status = infoMember.getOnlineStatus().getKey();
                 game = infoMember.getActivities().get(0).getName();
+                Iterator<Role> it = infoMember.getRoles().iterator();
                 StringBuilder stringBuilder = new StringBuilder();
-                infoMember.getRoles().forEach(role -> {
-                    stringBuilder.append(role.getAsMention()).append(", ");
-                });
+                while(it.hasNext()){
+                    Role role = it.next();
+                    stringBuilder.append(role.getAsMention());
+                    if (it.hasNext())stringBuilder.append(", ");
+                }
                 roles = stringBuilder.toString();
             }
         }
 
         EmbedCrafter em = new EmbedCrafter().setColor(Color.GREEN);
         em.setDescription(":spy: **Informations sur " + infoUser.getName() + ":**")
-                .addField(new MessageEmbed.Field("Nom", name, true))
-                .addField(new MessageEmbed.Field("Tag", tag, true))
-                .addField(new MessageEmbed.Field("ID", id, true))
-                .addField(new MessageEmbed.Field("Statut", status, true))
-                .addField(new MessageEmbed.Field("Joue à", game, true))
-                .addField(new MessageEmbed.Field("Rôles", roles, true))
-                .addField(new MessageEmbed.Field("A rejoint le serveur le", guildJoinDate, true))
-                .addField(new MessageEmbed.Field("A rejoint Discord le", discordJoinDate, true))
-                .addField(new MessageEmbed.Field("URL de l'avatar", avatar, true))
+                .addField("Nom", name, true)
+                .addField("Tag", tag, true)
+                .addField("ID", id, true)
+                .addField("Statut", status, true)
+                .addField("Joue à", game, true)
+                .addField("Rôles", roles, true)
+                .addField("A rejoint le serveur le", guildJoinDate, true)
+                .addField("A rejoint Discord le", discordJoinDate, true)
+                .addField("URL de l'avatar", avatar, true)
                 .setThumbnailUrl(avatar);
         textChannel.sendMessage(em.build()).queue();
     }
