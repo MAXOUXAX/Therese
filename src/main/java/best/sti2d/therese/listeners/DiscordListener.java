@@ -62,7 +62,7 @@ public class DiscordListener implements EventListener {
         embedCrafter.setTitle("Private message received of " + event.getAuthor().getName());
         embedCrafter.setThumbnailUrl(therese.getConfigurationManager().getStringValue("cancelIcon"));
         embedCrafter.setDescription("Cette action est **IMPOSSIBLE**");
-        event.getChannel().sendMessage(embedCrafter.build().build()).queue();
+        event.getChannel().sendMessage(embedCrafter.build()).queue();
     }
 
 }
