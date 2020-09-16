@@ -3,7 +3,8 @@ package best.sti2d.therese.commands.register.discord;
 import best.sti2d.therese.Therese;
 import best.sti2d.therese.commands.Command;
 import best.sti2d.therese.commands.CommandMap;
-import net.dv8tion.jda.api.EmbedBuilder;
+import best.sti2d.therese.utils.EmbedCrafter;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
@@ -20,9 +21,9 @@ public class CommandEmbed {
     @Command(name="embed",type = Command.ExecutorType.ALL,power = 100,help = ".embed <titre>-²<description>-²<image (url)>",example = ".embed Ceci est une annonce-²Juste pour vous dire que les bananes c'est assez bon mais que la raclette reste au dessus.-²https://lien-de-l-image.fr/image32.png")
     public void embed(User user, TextChannel textChannel, String[] args) {
         try {
-            EmbedBuilder em = commandMap.getHelpEmbed("embed");
+            MessageEmbed em = commandMap.getHelpEmbed("embed");
             if (args.length == 0) {
-                textChannel.sendMessage(em.build()).queue();
+                textChannel.sendMessage(em).queue();
             } else {
                 StringBuilder str = new StringBuilder();
 
@@ -31,7 +32,7 @@ public class CommandEmbed {
                 }
 
                 if (!str.toString().contains("-²")) {
-                    textChannel.sendMessage(em.build()).queue();
+                    textChannel.sendMessage(em).queue();
                     return;
                 }
 
@@ -49,15 +50,14 @@ public class CommandEmbed {
                     imageURL = argsReal[2];
                 }
 
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.setTitle(title, "https://twitch.lyorine.com");
-                embedBuilder.setFooter(therese.getConfigurationManager().getStringValue("embedFooter"), therese.getConfigurationManager().getStringValue("embedIconUrl"));
-                embedBuilder.setColor(15844367);
-                embedBuilder.setDescription(description);
+                EmbedCrafter embedCrafter = new EmbedCrafter()
+                        .setTitle(title, "https://sti2d.best/")
+                        .setColor(15844367)
+                        .setDescription(description);
                 if (imageURL != null) {
-                    embedBuilder.setImage(imageURL);
+                    embedCrafter.setImageUrl(imageURL);
                 }
-                textChannel.sendMessage(embedBuilder.build()).queue();
+                textChannel.sendMessage(embedCrafter.build()).queue();
             }
         }catch (Exception e){
             therese.getErrorHandler().handleException(e);
