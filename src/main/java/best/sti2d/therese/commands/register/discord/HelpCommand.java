@@ -3,9 +3,10 @@ package best.sti2d.therese.commands.register.discord;
 import best.sti2d.therese.commands.Command;
 import best.sti2d.therese.commands.CommandMap;
 import best.sti2d.therese.commands.SimpleCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
+import best.sti2d.therese.utils.EmbedCrafter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.internal.entities.UserImpl;
 
@@ -17,9 +18,9 @@ public class HelpCommand {
         this.commandMap = commandMap;
     }
 
-    @Command(name="help",type= Command.ExecutorType.USER,description="Affiche l'entièreté des commandes disponibles", help = ".help", example = ".help")
+    @Command(name="help",type= Command.ExecutorType.USER,description="Affiche l'entièreté des commandes disponibles", help = "help", example = "help")
     private void help(User user, MessageChannel channel, Guild guild){
-        EmbedBuilder builder = new EmbedBuilder();
+        EmbedCrafter builder = new EmbedCrafter();
         builder.setTitle("Aide » Liste des commandes");
         builder.setColor(3447003);
 
@@ -28,7 +29,7 @@ public class HelpCommand {
 
             if(guild != null && command.getPower() > commandMap.getPowerUser(guild, user)) continue;
 
-            builder.addField(command.getName(), command.getDescription(), true);
+            builder.addField(new MessageEmbed.Field(command.getName(), command.getDescription(), true));
         }
 
         if(!user.hasPrivateChannel()) user.openPrivateChannel().complete();

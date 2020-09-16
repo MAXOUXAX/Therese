@@ -64,12 +64,8 @@ public class Therese implements Runnable{
     }
 
     private void loadPronote() {
-        try {
-            this.pronoteManager = new PronoteManager();
-            pronoteManager.connect();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.pronoteManager = new PronoteManager();
+        //pronoteManager.connect();
     }
 
     private void loadDiscord() throws LoginException, InterruptedException {

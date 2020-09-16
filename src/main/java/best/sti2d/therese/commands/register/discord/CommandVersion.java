@@ -3,7 +3,7 @@ package best.sti2d.therese.commands.register.discord;
 import best.sti2d.therese.Therese;
 import best.sti2d.therese.commands.Command;
 import best.sti2d.therese.commands.CommandMap;
-import net.dv8tion.jda.api.EmbedBuilder;
+import best.sti2d.therese.utils.EmbedCrafter;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 public class CommandVersion {
@@ -16,10 +16,10 @@ public class CommandVersion {
         this.therese = Therese.getInstance();
     }
 
-    @Command(name="version",type= Command.ExecutorType.USER,description="Affiche les informations sur la version du BOT", help = ".version", example = ".version")
+    @Command(name="version",type= Command.ExecutorType.USER,description="Affiche les informations sur la version du BOT", help = "version", example = "version")
     private void version(MessageChannel channel){
         try{
-            EmbedBuilder builder = new EmbedBuilder();
+            EmbedCrafter builder = new EmbedCrafter();
             builder.setTitle("Thérèse • by MAXOUXAX • Amazingly powerful", therese.getConfigurationManager().getStringValue("websiteUrl"));
             builder.setColor(3447003);
             builder.addField("Je suis en version", therese.getVersion(), true);

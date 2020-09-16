@@ -4,6 +4,7 @@ import best.sti2d.therese.Therese;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,11 @@ public class EmbedCrafter {
         return this;
     }
 
+    public EmbedCrafter setColor(Color color) {
+        this.color = color.getRGB();
+        return this;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -61,6 +67,11 @@ public class EmbedCrafter {
 
     public EmbedCrafter addField(MessageEmbed.Field field) {
         this.fields.add(field);
+        return this;
+    }
+
+    public EmbedCrafter addField(String name, String value, boolean inline) {
+        this.fields.add(new MessageEmbed.Field(name, value, inline));
         return this;
     }
 

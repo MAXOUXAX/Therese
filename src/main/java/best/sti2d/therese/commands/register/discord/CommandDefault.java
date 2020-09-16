@@ -3,6 +3,7 @@ package best.sti2d.therese.commands.register.discord;
 import best.sti2d.therese.Therese;
 import best.sti2d.therese.commands.Command;
 import best.sti2d.therese.commands.CommandMap;
+import best.sti2d.therese.utils.EmbedCrafter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -27,7 +28,7 @@ public class CommandDefault {
         therese.setRunning(false);
     }
 
-    @Command(name="power",power=150, description = "Permet de définir le power d'un utilisateur", example = ".power 150 @MAXOUXAX", help = ".power <power> <@user>")
+    @Command(name="power",power=150, description = "Permet de définir le power d'un utilisateur", example = "power 150 @MAXOUXAX", help = "power <power> <@user>")
     private void power(User user, MessageChannel channel, Message message, String[] args){
         MessageEmbed helperEmbed = commandMap.getHelpEmbed("power");
         if(args.length == 0 || message.getMentionedUsers().size() == 0){
@@ -45,7 +46,7 @@ public class CommandDefault {
         channel.sendMessage("Le power de "+target.getAsMention()+" est maintenant de "+power).queue();
     }
 
-    @Command(name="game",power=100,description = "Permet de modifier le jeu du BOT.", help = ".game <jeu>", example = ".game planter des tomates")
+    @Command(name="game",power=100,description = "Permet de modifier le jeu du BOT.", help = "game <jeu>", example = "game planter des tomates")
     private void game(TextChannel textChannel, JDA jda, String[] args){
         MessageEmbed helperEmbed = commandMap.getHelpEmbed("game");
         if(args.length == 0){
@@ -61,7 +62,7 @@ public class CommandDefault {
         }
     }
 
-    @Command(name="delete",power=50,description = "Permet de nettoyer un nombre x de message du salon", example = ".delete 50", help = ".delete <nombre de message>")
+    @Command(name="delete",power=50,description = "Permet de nettoyer un nombre x de message du salon", example = "delete 50", help = "delete <nombre de message>")
     private void delete(TextChannel textChannel, JDA jda, String[] args){
         if (getInt(args[0]) <= 100) {
             List<Message> msgs;
@@ -81,73 +82,55 @@ public class CommandDefault {
 
     }
 
-    @Command(name = "info",description = "Permet d'obtenir des informations sur un membre",type = Command.ExecutorType.USER, help = ".info <@user>", example = ".info @Maxx_#2233")
-    private void info(User user, Guild guild, TextChannel textChannel, String[] args, Message message){
-        Member member;
+    @Command(name = "info",description = "Permet d'obtenir des informations sur un membre",type = Command.ExecutorType.USER, help = "info <@user>", example = "info @MAXOUXAX#2233")
+    private void info(User user, Guild guild, TextChannel textChannel, String[] args, Message message) {
+        User infoUser = message.getMentionedUsers().get(0);
 
-        if (args.length > 0) {
-            member = guild.getMember(message.getMentionedUsers().get(0));
-        } else {
-            member = message.getMember();
+        String name = infoUser.getName();
+        String tag = infoUser.getName() + "#" + infoUser.getDiscriminator();
+        String guildJoinDate = "-/-";
+        String status = "-/-";
+        String avatar = infoUser.getAvatarUrl();
+        String discordJoinDate = infoUser.getTimeCreated().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+        String id = infoUser.getId();
+        String roles = "-/-";
+        String game = "-/-";
+        if (guild.isMember(infoUser)) {
+            Member infoMember = guild.getMember(infoUser);
+            if (infoMember != null) {
+                guildJoinDate = infoMember.getTimeJoined().format(DateTimeFormatter.RFC_1123_DATE_TIME);
+                status = infoMember.getOnlineStatus().getKey();
+                game = infoMember.getActivities().get(0).getName();
+                StringBuilder stringBuilder = new StringBuilder();
+                infoMember.getRoles().forEach(role -> {
+                    stringBuilder.append(role.getAsMention()).append(", ");
+                });
+                roles = stringBuilder.toString();
+            }
         }
 
-        String name = member.getEffectiveName();
-        String tag = member.getUser().getName() + "#" + member.getUser().getDiscriminator();
-        String guildJoinDate = member.getTimeJoined().format(DateTimeFormatter.RFC_1123_DATE_TIME);
-        String discordJoinDate = member.getUser().getTimeCreated().format(DateTimeFormatter.RFC_1123_DATE_TIME);
-        String id = member.getUser().getId();
-        String status = member.getOnlineStatus().getKey();
-        String roles = "";
-        String game;
-        String avatar = member.getUser().getAvatarUrl();
-
-        try {
-            game = member.getActivities().get(0).getName();
-        } catch (Exception e) {
-            game = "-/-";
-        }
-
-        for ( Role r : member.getRoles() ) {
-            roles += r.getName() + ", ";
-        }
-        if (roles.length() > 0)
-            roles = roles.substring(0, roles.length()-2);
-        else
-            roles = "Aucun rôle.";
-
-        if (avatar == null) {
-            avatar = "Pas d'avatar";
-        }
-
-        EmbedBuilder em = new EmbedBuilder().setColor(Color.GREEN);
-        em.setDescription(":spy:   **Informations sur " + member.getUser().getName() + ":**")
-                .addField("Nom", name, true)
-                .addField("Tag", tag, true)
-                .addField("ID", id, true)
-                .addField("Statut", status, true)
-                .addField("Joue à", game, true)
-                .addField("Rôles", roles, true)
-                .addField("A rejoint le serveur le", guildJoinDate, true)
-                .addField("A rejoint discord le", discordJoinDate, true)
-                .addField("URL de l'avatar", avatar, true);
-        em.setFooter(therese.getConfigurationManager().getStringValue("embedFooter"), therese.getConfigurationManager().getStringValue("embedIconUrl"));
-        if (!avatar.equals("Pas d'avatar")) {
-            em.setThumbnail(avatar);
-        }
-
-        textChannel.sendMessage(
-                em.build()
-        ).queue();
+        EmbedCrafter em = new EmbedCrafter().setColor(Color.GREEN);
+        em.setDescription(":spy: **Informations sur " + infoUser.getName() + ":**")
+                .addField(new MessageEmbed.Field("Nom", name, true))
+                .addField(new MessageEmbed.Field("Tag", tag, true))
+                .addField(new MessageEmbed.Field("ID", id, true))
+                .addField(new MessageEmbed.Field("Statut", status, true))
+                .addField(new MessageEmbed.Field("Joue à", game, true))
+                .addField(new MessageEmbed.Field("Rôles", roles, true))
+                .addField(new MessageEmbed.Field("A rejoint le serveur le", guildJoinDate, true))
+                .addField(new MessageEmbed.Field("A rejoint Discord le", discordJoinDate, true))
+                .addField(new MessageEmbed.Field("URL de l'avatar", avatar, true))
+                .setThumbnailUrl(avatar);
+        textChannel.sendMessage(em.build()).queue();
     }
 
-    @Command(name = "ping", description = "Permet de récupérer le ping du bot", type = Command.ExecutorType.USER, example = ".ping", help = ".ping")
+    @Command(name = "ping", description = "Permet de récupérer le ping du bot", type = Command.ExecutorType.USER, example = "ping", help = "ping")
     private void ping(TextChannel textChannel, User user, Guild guild){
         long ping = guild.getJDA().getGatewayPing();
-        EmbedBuilder builder = new EmbedBuilder()
-                .setTitle("DiscordAPI ping", therese.getConfigurationManager().getStringValue("websiteUrl"))
-                .setThumbnail(user.getAvatarUrl()+"?size=256")
-                .addField(new MessageEmbed.Field("Ping", ping+"ms", true))
-                .setFooter(therese.getConfigurationManager().getStringValue("embedFooter"), therese.getConfigurationManager().getStringValue("embedIconUrl"));
+        EmbedCrafter builder = new EmbedCrafter()
+                .setTitle("Discord API ping", therese.getConfigurationManager().getStringValue("websiteUrl"))
+                .setThumbnailUrl(user.getAvatarUrl()+"?size=256")
+                .addField(new MessageEmbed.Field("Ping", ping+"ms", true));
         if(ping > 300) {
             builder.setColor(Color.RED);
             builder.setDescription("Mauvais ping");
