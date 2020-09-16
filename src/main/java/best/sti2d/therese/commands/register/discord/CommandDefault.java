@@ -29,15 +29,15 @@ public class CommandDefault {
 
     @Command(name="power",power=150, description = "Permet de définir le power d'un utilisateur", example = ".power 150 @MAXOUXAX", help = ".power <power> <@user>")
     private void power(User user, MessageChannel channel, Message message, String[] args){
-        EmbedBuilder helperEmbed = commandMap.getHelpEmbed("power");
+        MessageEmbed helperEmbed = commandMap.getHelpEmbed("power");
         if(args.length == 0 || message.getMentionedUsers().size() == 0){
-            channel.sendMessage(helperEmbed.build()).queue();
+            channel.sendMessage(helperEmbed).queue();
         }
         int power = 0;
         try{
             power = Integer.parseInt(args[0]);
         }catch(NumberFormatException nfe){
-            channel.sendMessage(helperEmbed.build()).queue();
+            channel.sendMessage(helperEmbed).queue();
         }
 
         User target = message.getMentionedUsers().get(0);
@@ -47,9 +47,9 @@ public class CommandDefault {
 
     @Command(name="game",power=100,description = "Permet de modifier le jeu du BOT.", help = ".game <jeu>", example = ".game planter des tomates")
     private void game(TextChannel textChannel, JDA jda, String[] args){
-        EmbedBuilder helperEmbed = commandMap.getHelpEmbed("game");
+        MessageEmbed helperEmbed = commandMap.getHelpEmbed("game");
         if(args.length == 0){
-            textChannel.sendMessage(helperEmbed.build()).queue();
+            textChannel.sendMessage(helperEmbed).queue();
         }else {
             StringBuilder builder = new StringBuilder();
             for (String str : args) {
