@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
-    <!-- Appender Configuration [Console] -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>latest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>%d{yyyy-dd-MM}.%i.log</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight([%-5level]) %logger{25} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+            <pattern>%d{HH:mm:ss} [%thread] %highlight(%-5level) %cyan(%logger{35}) - %msg %n</pattern>
         </encoder>
     </appender>
 
-    <!-- Appender Output Configuration -->
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </root>
+
 </configuration>
