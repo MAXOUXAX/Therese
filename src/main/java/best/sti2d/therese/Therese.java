@@ -42,7 +42,6 @@ public class Therese implements Runnable{
 
         String string = new File(Therese.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
         string = string.replaceAll("Therese-", "")
-                .replaceAll("-jar-with-dependencies", "")
                 .replaceAll(".jar", "");
         this.version = string;
 
