@@ -18,7 +18,6 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 public final class CommandMap {
 
@@ -142,13 +141,13 @@ public final class CommandMap {
     public void discordCommandConsole(String command){
         Object[] object = getDiscordCommand(command);
         if(object[0] == null || ((SimpleCommand)object[0]).getExecutorType() == Command.ExecutorType.USER){
-            therese.getLogger().log(Level.WARNING,"Commande inconnue.");
+            therese.getLogger().warn("Commande inconnue.");
             return;
         }
         try{
             executeDiscordCommand(((SimpleCommand)object[0]), command, (String[])object[1], null);
         }catch(Exception e){
-            therese.getLogger().log(Level.SEVERE,"La commande "+command+" ne s'est pas exécutée à cause d'un problème sur la méthode "+((SimpleCommand)object[0]).getMethod().getName()+" qui ne s'est pas correctement exécutée.");
+            therese.getLogger().error("La commande "+command+" ne s'est pas exécutée à cause d'un problème sur la méthode "+((SimpleCommand)object[0]).getMethod().getName()+" qui ne s'est pas correctement exécutée.");
             therese.getErrorHandler().handleException(e);
         }
     }
@@ -162,7 +161,7 @@ public final class CommandMap {
         try{
             executeDiscordCommand(((SimpleCommand)object[0]), command,(String[])object[1], message);
         }catch(Exception e){
-            therese.getLogger().log(Level.SEVERE,"La methode "+((SimpleCommand)object[0]).getMethod().getName()+" n'est pas correctement initialisé. ("+e.getMessage()+")");
+            therese.getLogger().error("La methode "+((SimpleCommand)object[0]).getMethod().getName()+" n'est pas correctement initialisé. ("+e.getMessage()+")");
             therese.getErrorHandler().handleException(e);
         }
         return true;

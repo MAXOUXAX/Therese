@@ -6,18 +6,17 @@ import best.sti2d.therese.listeners.DiscordListener;
 import best.sti2d.therese.pronote.PronoteManager;
 import best.sti2d.therese.utils.ConfigurationManager;
 import best.sti2d.therese.utils.ErrorHandler;
-import best.sti2d.therese.utils.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.slf4j.Logger;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.logging.Level;
 
 public class Therese implements Runnable{
 
@@ -35,7 +34,7 @@ public class Therese implements Runnable{
 
     public Therese() throws LoginException, IllegalArgumentException, NullPointerException, IOException, InterruptedException, SQLException {
         instance = this;
-        this.logger = new Logger();
+        this.logger = org.slf4j.LoggerFactory.getLogger(Therese.class);
         this.errorHandler = new ErrorHandler();
 
         DatabaseManager.initDatabaseConnection();
@@ -47,21 +46,21 @@ public class Therese implements Runnable{
 
         this.configurationManager = new ConfigurationManager();
 
-        logger.log(Level.INFO, "--------------- STARTING ---------------");
+        logger.info("--------------- STARTING ---------------");
 
-        logger.log(Level.INFO, "> Generated new BOT instance");
-        logger.log(Level.INFO, "> BOT thread started, loading libraries...");
+        logger.info("> Generated new BOT instance");
+        logger.info("> BOT thread started, loading libraries...");
         this.commandMap = new CommandMap();
-        logger.log(Level.INFO, "> Libraries loaded! Loading JDA...");
+        logger.info("> Libraries loaded! Loading JDA...");
 
         loadDiscord();
-        logger.log(Level.INFO, "> JDA loaded! Loading Pronote...");
+        logger.info("> JDA loaded! Loading Pronote...");
 
         loadPronote();
-        logger.log(Level.INFO, "> Pronote loaded!");
+        logger.info("> Pronote loaded!");
 
-        logger.log(Level.INFO, "> The BOT is now good to go !");
-        logger.log(Level.INFO, "--------------- STARTING ---------------");
+        logger.info("> The BOT is now good to go !");
+        logger.info("--------------- STARTING ---------------");
     }
 
     private void loadPronote() {
@@ -116,18 +115,16 @@ public class Therese implements Runnable{
         }
 
         jda.getPresence().setActivity(Activity.playing("Arrêt en cours..."));
-        logger.log(Level.INFO, "--------------- STOPPING ---------------");
-        logger.log(Level.INFO, "> Shutdowning...");
+        logger.info("--------------- STOPPING ---------------");
+        logger.info("> Shutdowning...");
         scanner.close();
-        logger.log(Level.INFO, "> Scanner closed!");
+        logger.info("> Scanner closed!");
         jda.shutdown();
-        logger.log(Level.INFO, "> JDA shutdowned!");
-        logger.save();
-        logger.log(Level.INFO, "> Logger saved");
+        logger.info("> JDA shutdowned!");
         DatabaseManager.closeDatabaseConnection();
-        logger.log(Level.INFO, "> Closed database connection!");
-        logger.log(Level.INFO, "--------------- STOPPING ---------------");
-        logger.log(Level.INFO, "Arrêt du BOT réussi");
+        logger.info("> Closed database connection!");
+        logger.info("--------------- STOPPING ---------------");
+        logger.info("Arrêt du BOT réussi");
         System.exit(0);
     }
 

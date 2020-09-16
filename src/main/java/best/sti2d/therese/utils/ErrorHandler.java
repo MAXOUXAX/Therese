@@ -3,7 +3,6 @@ package best.sti2d.therese.utils;
 import best.sti2d.therese.Therese;
 
 import java.util.Arrays;
-import java.util.logging.Level;
 
 public class ErrorHandler {
 
@@ -14,9 +13,9 @@ public class ErrorHandler {
     }
 
     public void handleException(Throwable exception){
-        therese.getLogger().log(Level.SEVERE, "Une erreur est survenue !\n"+exception.getMessage());
+        therese.getLogger().error("Une erreur est survenue !\n"+exception.getMessage());
         exception.printStackTrace();
-        therese.getLogger().log(Level.SEVERE, exception.getMessage()+"\n"+Arrays.toString(exception.getStackTrace()), false);
+        therese.getLogger().error(exception.getMessage()+"\n"+Arrays.toString(exception.getStackTrace()), false);
     }
 
 
