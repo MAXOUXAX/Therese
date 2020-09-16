@@ -11,6 +11,7 @@ import java.util.List;
 public class EmbedCrafter {
 
     private String title;
+    private String url;
     private int color = 15528177;
     private String description;
     private final List<MessageEmbed.Field> fields = new ArrayList<>();
@@ -21,8 +22,18 @@ public class EmbedCrafter {
         return title;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     public EmbedCrafter setTitle(String title) {
         this.title = title;
+        return this;
+    }
+
+    public EmbedCrafter setTitle(String title, String url) {
+        this.title = title;
+        this.url = url;
         return this;
     }
 
@@ -71,7 +82,7 @@ public class EmbedCrafter {
         return this;
     }
 
-    public EmbedBuilder build(){
+    public MessageEmbed build(){
         Therese therese = Therese.getInstance();
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder
@@ -79,11 +90,17 @@ public class EmbedCrafter {
             .setFooter(therese.getConfigurationManager().getStringValue("embedFooter"), therese.getConfigurationManager().getStringValue("embedIconUrl"))
             .setTimestamp(LocalDateTime.now());
         fields.forEach(embedBuilder::addField);
-        if(title != null) embedBuilder.setTitle(title);
+        if(title != null){
+            if(url != null){
+                embedBuilder.setTitle(title, url);
+            }else {
+                embedBuilder.setTitle(title);
+            }
+        }
         if(description != null) embedBuilder.setDescription(description);
         if(thumbnailUrl != null) embedBuilder.setThumbnail(thumbnailUrl);
         if(imageUrl != null) embedBuilder.setImage(imageUrl);
-        return embedBuilder;
+        return embedBuilder.build();
     }
 
 }
