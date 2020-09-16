@@ -79,7 +79,7 @@ public final class CommandMap {
         }
     }
 
-    public EmbedBuilder getHelpEmbed(String commandName) {
+    public MessageEmbed getHelpEmbed(String commandName) {
         try {
             SimpleCommand command = discordCommands.get(commandName);
             EmbedCrafter embedCrafter = new EmbedCrafter()
@@ -91,7 +91,7 @@ public final class CommandMap {
         }catch (Exception e){
             therese.getErrorHandler().handleException(e);
         }
-        return new EmbedBuilder();
+        return new EmbedBuilder().build();
     }
 
     public void setUserPower(User user, int power)
