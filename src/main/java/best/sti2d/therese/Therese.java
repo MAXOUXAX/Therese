@@ -65,7 +65,11 @@ public class Therese implements Runnable{
 
     private void loadPronote() {
         this.pronoteManager = new PronoteManager();
-        //pronoteManager.connect();
+        try {
+            pronoteManager.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadDiscord() throws LoginException, InterruptedException {
@@ -149,4 +153,7 @@ public class Therese implements Runnable{
         return instance;
     }
 
+    public PronoteManager getPronoteManager() {
+        return pronoteManager;
+    }
 }

@@ -1,10 +1,7 @@
 package best.sti2d.therese.commands;
 
 import best.sti2d.therese.Therese;
-import best.sti2d.therese.commands.register.discord.CommandDefault;
-import best.sti2d.therese.commands.register.discord.CommandEmbed;
-import best.sti2d.therese.commands.register.discord.CommandVersion;
-import best.sti2d.therese.commands.register.discord.HelpCommand;
+import best.sti2d.therese.commands.register.discord.*;
 import best.sti2d.therese.database.DatabaseManager;
 import best.sti2d.therese.utils.EmbedCrafter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -23,14 +20,14 @@ public final class CommandMap {
 
     private final Therese therese;
 
-    private final Map<Long, Integer> powers = new HashMap<>();
+    private final Map<String, Integer> powers = new HashMap<>();
 
     private final Map<String, SimpleCommand> discordCommands = new HashMap<>();
     private final String discordTag = ".";
 
     public CommandMap() {
         this.therese = Therese.getInstance();
-        registerCommands(new CommandDefault(this), new CommandEmbed(this), new CommandVersion(this), new HelpCommand(this));
+        registerCommands(new CommandDefault(this), new CommandEmbed(this), new CommandVersion(this), new HelpCommand(this), new CommandRequest(this));
         loadPower();
     }
 
@@ -43,7 +40,7 @@ public final class CommandMap {
             final ResultSet resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next()){
-                long id = resultSet.getLong("id");
+                String id = resultSet.getString("id");
                 int power = resultSet.getInt("power");
                 powers.put(id, power);
             }
@@ -53,26 +50,26 @@ public final class CommandMap {
         }
     }
 
-    public void savePower(Long id, int power) throws SQLException {
+    public void savePower(String id, int power) throws SQLException {
         Connection connection = DatabaseManager.getDatabaseAccess().getConnection();
         if(power > 0) {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE users SET power = ?, updated_at = ? WHERE id = ?");
             preparedStatement.setInt(1, power);
             preparedStatement.setDate(2, new Date(System.currentTimeMillis()));
-            preparedStatement.setLong(3, id);
+            preparedStatement.setString(3, id);
 
             final int updateCount = preparedStatement.executeUpdate();
 
             if (updateCount < 1) {
                 PreparedStatement insertPreparedStatement = connection.prepareStatement("INSERT INTO users (id, power, updated_at) VALUES (?, ?, ?)");
-                insertPreparedStatement.setLong(1, id);
+                insertPreparedStatement.setString(1, id);
                 insertPreparedStatement.setInt(2, power);
                 insertPreparedStatement.setDate(3, new Date(System.currentTimeMillis()));
                 insertPreparedStatement.execute();
             }
         }else{
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE id = ?");
-            preparedStatement.setLong(1, id);
+            preparedStatement.setString(1, id);
 
             preparedStatement.execute();
         }
@@ -97,12 +94,12 @@ public final class CommandMap {
     public void setUserPower(User user, int power)
     {
         if(power == 0){
-            powers.remove(user.getIdLong());
+            powers.remove(user.getId());
         }else{
-            powers.put(user.getIdLong(), power);
+            powers.put(user.getId(), power);
         }
         try {
-            savePower(user.getIdLong(), power);
+            savePower(user.getId(), power);
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
