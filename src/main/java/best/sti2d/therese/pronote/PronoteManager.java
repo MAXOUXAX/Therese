@@ -106,8 +106,9 @@ public class PronoteManager {
         ArrayList<MessageEmbed> messageEmbedList = new ArrayList<>();
         jsonArray.forEach(o -> {
             JSONObject element = (JSONObject) o;
+            System.out.println("element.toString() = " + element.toString());
             String subject = element.getString("subject");
-            String room = element.getString("room");
+            String room = element.isNull("room") ? "-/-" : element.getString("room");
             Date from = new Date(element.getLong("from"));
             Date to = new Date(element.getLong("to"));
 
