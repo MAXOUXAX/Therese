@@ -76,6 +76,7 @@ public final class CommandMap {
 
             preparedStatement.execute();
         }
+        connection.close();
     }
 
     public MessageEmbed getHelpEmbed(String commandName) {
