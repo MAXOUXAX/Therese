@@ -60,4 +60,15 @@ public class PronoteHelper {
         return messageEmbedList;
     }
 
+    public ArrayList<MessageEmbed> getHomeworksEmbed(String date) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("query", "{homeworks(from: \""+date+"\") {description subject givenAt for color files}}");
+
+        JSONObject finalObject = pronoteManager.makeRequest("/graphql", jsonObject);
+
+        System.out.println("finalObject.toString() = " + finalObject.toString());
+        ArrayList<MessageEmbed> messageEmbedList = new ArrayList<>();
+        return messageEmbedList;
+    }
+
 }
