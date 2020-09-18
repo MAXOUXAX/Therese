@@ -81,7 +81,7 @@ public class PronoteManager {
         connection.setRequestProperty("Token", token);
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("query", "{timetable(from: \"2020-09-18\") {from to subject room}}");
+        jsonObject.put("query", "{timetable(from: \"2020-09-18\") {from to subject room teacher color}}");
 
         try (DataOutputStream out = new DataOutputStream(connection.getOutputStream()))
         {
@@ -109,6 +109,8 @@ public class PronoteManager {
             System.out.println("element.toString() = " + element.toString());
             String subject = element.getString("subject");
             String room = element.isNull("room") ? "-/-" : element.getString("room");
+            String teacher = element.isNull("teacher") ? "-/-" : element.getString("teacher");
+            String color = element.isNull("color") ? "-/-" : element.getString("color");
             Date from = new Date(element.getLong("from"));
             Date to = new Date(element.getLong("to"));
 
@@ -116,7 +118,8 @@ public class PronoteManager {
 
             EmbedCrafter embedCrafter = new EmbedCrafter();
             embedCrafter.setTitle(subject+" - "+new SimpleDateFormat("dd/MM").format(from))
-                    .setDescription("**Salle:** "+room+"\n"+formatter.format(from)+" » "+formatter.format(to));
+                    .setDescription("**Salle:** "+room+"\n"+formatter.format(from)+" » "+formatter.format(to)+"\n**Professeur**: "+teacher)
+                    .setColor(Integer.parseInt(color));
             messageEmbedList.add(embedCrafter.build());
         });
         return messageEmbedList;
