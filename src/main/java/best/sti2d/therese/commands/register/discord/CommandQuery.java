@@ -21,15 +21,18 @@ public class CommandQuery {
 
     @Command(name="query",type = Command.ExecutorType.ALL,power = 1000,help = "query <query>",example = "query {timetable(from: \"2020-09-19\") {from to subject room teacher color status isAway isCancelled}}")
     public void query(TextChannel textChannel, String[] args) throws IOException {
-        PronoteManager pronoteManager = new PronoteManager();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < args.length; i++) {
-            stringBuilder.append(args[i]).append(" ");
+        if (args.length == 0) {
+            textChannel.sendMessage(commandMap.getHelpEmbed("query")).queue();
+        } else {
+            PronoteManager pronoteManager = new PronoteManager();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < args.length; i++) {
+                stringBuilder.append(args[i]).append(" ");
+            }
+            JSONObject query = new JSONObject();
+            query.put("query", stringBuilder.toString());
+            JSONObject result = pronoteManager.makeRequest("/graphql", query);
+            textChannel.sendMessage("Raw response:\n`" + result.toString() + "`").queue();
         }
-        JSONObject query = new JSONObject();
-        query.put("query", stringBuilder.toString());
-        JSONObject result = pronoteManager.makeRequest("/graphql", query);
-        textChannel.sendMessage("Raw response:\n`"+result.toString()+"`").queue();
     }
-
 }
