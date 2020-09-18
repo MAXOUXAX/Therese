@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -118,8 +119,8 @@ public class PronoteManager {
 
             EmbedCrafter embedCrafter = new EmbedCrafter();
             embedCrafter.setTitle(subject+" - "+new SimpleDateFormat("dd/MM").format(from))
-                    .setDescription("**Salle:** "+room+"\n"+formatter.format(from)+" » "+formatter.format(to)+"\n**Professeur**: "+teacher)
-                    .setColor(Integer.parseInt(color));
+                    .setDescription("**Salle:** "+room+"\n**Horaires**: "+formatter.format(from)+" » "+formatter.format(to)+"\n**Professeur**: "+teacher)
+                    .setColor(Color.decode(color));
             messageEmbedList.add(embedCrafter.build());
         });
         return messageEmbedList;
