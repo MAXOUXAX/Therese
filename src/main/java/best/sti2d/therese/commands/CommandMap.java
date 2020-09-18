@@ -112,7 +112,7 @@ public final class CommandMap {
 
     public int getPowerUser(Guild guild, User user)
     {
-        if(guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) return 150;
+        if(guild.getMember(user).hasPermission(Permission.ADMINISTRATOR)) return 10000;
         return powers.containsKey(user.getIdLong()) ? powers.get(user.getIdLong()) : 0;
     }
 

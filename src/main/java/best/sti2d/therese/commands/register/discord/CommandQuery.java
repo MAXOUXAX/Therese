@@ -24,7 +24,7 @@ public class CommandQuery {
         if (args.length == 0) {
             textChannel.sendMessage(commandMap.getHelpEmbed("query")).queue();
         } else {
-            PronoteManager pronoteManager = new PronoteManager();
+            PronoteManager pronoteManager = therese.getPronoteManager();
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < args.length; i++) {
                 stringBuilder.append(args[i]).append(" ");
