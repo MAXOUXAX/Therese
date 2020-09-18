@@ -2,12 +2,8 @@ package best.sti2d.therese.pronote;
 
 import best.sti2d.therese.Therese;
 import best.sti2d.therese.utils.ConfigurationManager;
-import best.sti2d.therese.utils.EmbedCrafter;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,19 +11,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class PronoteManager {
 
     private final Therese therese;
     private final String pronoteServerUrl;
+    private final PronoteHelper pronoteHelper;
     private String token;
 
     public PronoteManager() {
         therese = Therese.getInstance();
         pronoteServerUrl = Therese.getInstance().getConfigurationManager().getStringValue("pronote_server_url");
+        pronoteHelper = new PronoteHelper();
     }
 
     public void connect() throws IOException {
@@ -43,39 +38,15 @@ public class PronoteManager {
         System.out.println("finalObject.toString() = " + finalObject.toString());
 
         token = finalObject.getString("token");
+        keepAlive();
     }
 
-    public ArrayList<MessageEmbed> testRequest() throws IOException {
+    private void keepAlive() throws IOException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("query", "{timetable(from: \"2020-09-18\") {from to subject room teacher color}}");
+        jsonObject.put("query", "mutation { setKeepAlive(enabled: true) }");
 
         JSONObject finalObject = makeRequest("/graphql", jsonObject);
-
         System.out.println("finalObject.toString() = " + finalObject.toString());
-        JSONArray jsonArray = finalObject.getJSONObject("data").getJSONArray("timetable");
-        ArrayList<MessageEmbed> messageEmbedList = new ArrayList<>();
-        jsonArray.forEach(o -> {
-            JSONObject element = (JSONObject) o;
-            System.out.println("element.toString() = " + element.toString());
-            String subject = element.getString("subject");
-            String room = element.isNull("room") ? "-/-" : element.getString("room");
-            String teacher = element.isNull("teacher") ? "-/-" : element.getString("teacher");
-            String color = element.isNull("color") ? "-/-" : element.getString("color");
-            Date from = new Date(element.getLong("from"));
-            Date to = new Date(element.getLong("to"));
-
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-
-            EmbedCrafter embedCrafter = new EmbedCrafter();
-            embedCrafter.setTitle(subject+" - "+new SimpleDateFormat("dd/MM").format(from))
-                    .setDescription("**Salle:** "+room+"\n" +
-                            "**Horaires**: "+formatter.format(from)+" » "+formatter.format(to)+"\n" +
-                            "**Professeur**: "+teacher)
-                    .setColor(Color.decode(color));
-
-            messageEmbedList.add(embedCrafter.build());
-        });
-        return messageEmbedList;
     }
 
     public JSONObject makeRequest(String endpoint, JSONObject query) throws IOException {
@@ -87,7 +58,7 @@ public class PronoteManager {
 
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Token", token);
+        if(token != null)connection.setRequestProperty("Token", token);
 
         try (DataOutputStream out = new DataOutputStream(connection.getOutputStream()))
         {
@@ -106,4 +77,7 @@ public class PronoteManager {
         return new JSONObject(content.toString());
     }
 
+    public PronoteHelper getHelper() {
+        return pronoteHelper;
+    }
 }
