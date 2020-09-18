@@ -22,7 +22,7 @@ public class PronoteManager {
     public PronoteManager() {
         therese = Therese.getInstance();
         pronoteServerUrl = Therese.getInstance().getConfigurationManager().getStringValue("pronote_server_url");
-        pronoteHelper = new PronoteHelper();
+        pronoteHelper = new PronoteHelper(this);
     }
 
     public void connect() throws IOException {

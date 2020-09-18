@@ -23,18 +23,22 @@ public class CommandEmploiDuTemps {
 
     @Command(name="edt",type = Command.ExecutorType.ALL,power = 50,help = "edt <date>",example = "edt 29/09/2020")
     public void emploiDuTemps(TextChannel textChannel, String[] args) throws IOException {
-        String[] dateParts = args[0].split("/");
-        String formattedDate = dateParts[2] + dateParts[1] + dateParts[0];
-        ArrayList<MessageEmbed> embeds = therese.getPronoteManager().getHelper().getClassesEmbeds(formattedDate);
-        if (!embeds.isEmpty()) {
-            embeds.forEach(messageEmbed -> {
-                textChannel.sendMessage(messageEmbed).queue();
-            });
+        if (args.length == 0) {
+            textChannel.sendMessage(commandMap.getHelpEmbed("edt")).queue();
         } else {
-            textChannel.sendMessage(new EmbedCrafter()
-                    .setTitle("Aucun cours pour le "+args[0])
-                    .setDescription("Aucun cours n'a été trouvé pour cette journée!")
-                    .setColor(Color.RED).build()).queue();
+            String[] dateParts = args[0].split("/");
+            String formattedDate = dateParts[2] +"-"+ dateParts[1] +"-"+ dateParts[0];
+            ArrayList<MessageEmbed> embeds = therese.getPronoteManager().getHelper().getClassesEmbeds(formattedDate);
+            if (!embeds.isEmpty()) {
+                embeds.forEach(messageEmbed -> {
+                    textChannel.sendMessage(messageEmbed).queue();
+                });
+            } else {
+                textChannel.sendMessage(new EmbedCrafter()
+                        .setTitle("Aucun cours pour le " + args[0])
+                        .setDescription("Aucun cours n'a été trouvé pour cette journée!")
+                        .setColor(Color.RED).build()).queue();
+            }
         }
     }
 
