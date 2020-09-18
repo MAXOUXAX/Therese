@@ -32,14 +32,6 @@ public class PronoteManager {
 
     public void connect() throws IOException {
         ConfigurationManager configurationManager = therese.getConfigurationManager();
-        URL url = new URL(pronoteServerUrl+"/auth/login");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("url", configurationManager.getStringValue("pronote_url"));
@@ -47,61 +39,18 @@ public class PronoteManager {
         jsonObject.put("password", configurationManager.getStringValue("pronote_password"));
         jsonObject.put("cas", configurationManager.getStringValue("pronote_cas"));
 
-        try (DataOutputStream out = new DataOutputStream(connection.getOutputStream()))
-        {
-            out.write(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
-        }
-
-        StringBuilder content = new StringBuilder();
-
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)))
-        {
-            String line;
-            while ((line = in.readLine()) != null)
-            {
-                content.append(line).append(System.lineSeparator());
-            }
-        }
-
-        connection.disconnect();
-        JSONObject finalObject = new JSONObject(content.toString());
+        JSONObject finalObject = makeRequest("/auth/login", jsonObject);
         System.out.println("finalObject.toString() = " + finalObject.toString());
 
         token = finalObject.getString("token");
     }
 
     public ArrayList<MessageEmbed> testRequest() throws IOException {
-        URL url = new URL(pronoteServerUrl+"/graphql");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Token", token);
-
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("query", "{timetable(from: \"2020-09-18\") {from to subject room teacher color}}");
 
-        try (DataOutputStream out = new DataOutputStream(connection.getOutputStream()))
-        {
-            out.write(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
-        }
+        JSONObject finalObject = makeRequest("/graphql", jsonObject);
 
-        StringBuilder content = new StringBuilder();
-
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)))
-        {
-            String line;
-            while ((line = in.readLine()) != null)
-            {
-                content.append(line).append(System.lineSeparator());
-            }
-        }
-
-        connection.disconnect();
-        JSONObject finalObject = new JSONObject(content.toString());
         System.out.println("finalObject.toString() = " + finalObject.toString());
         JSONArray jsonArray = finalObject.getJSONObject("data").getJSONArray("timetable");
         ArrayList<MessageEmbed> messageEmbedList = new ArrayList<>();
@@ -119,11 +68,42 @@ public class PronoteManager {
 
             EmbedCrafter embedCrafter = new EmbedCrafter();
             embedCrafter.setTitle(subject+" - "+new SimpleDateFormat("dd/MM").format(from))
-                    .setDescription("**Salle:** "+room+"\n**Horaires**: "+formatter.format(from)+" » "+formatter.format(to)+"\n**Professeur**: "+teacher)
+                    .setDescription("**Salle:** "+room+"\n" +
+                            "**Horaires**: "+formatter.format(from)+" » "+formatter.format(to)+"\n" +
+                            "**Professeur**: "+teacher)
                     .setColor(Color.decode(color));
+
             messageEmbedList.add(embedCrafter.build());
         });
         return messageEmbedList;
+    }
+
+    public JSONObject makeRequest(String endpoint, JSONObject query) throws IOException {
+        URL url = new URL(pronoteServerUrl+endpoint);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Token", token);
+
+        try (DataOutputStream out = new DataOutputStream(connection.getOutputStream()))
+        {
+            out.write(query.toString().getBytes(StandardCharsets.UTF_8));
+        }
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)))
+        {
+            String line;
+            while ((line = in.readLine()) != null)
+            {
+                content.append(line).append(System.lineSeparator());
+            }
+        }
+        connection.disconnect();
+        return new JSONObject(content.toString());
     }
 
 }
