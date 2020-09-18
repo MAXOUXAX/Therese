@@ -11,12 +11,12 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class CommandRequest {
+public class CommandEmploiDuTemps {
 
     private final Therese therese;
     private final CommandMap commandMap;
 
-    public CommandRequest(CommandMap commandMap){
+    public CommandEmploiDuTemps(CommandMap commandMap){
         this.commandMap = commandMap;
         this.therese = Therese.getInstance();
     }

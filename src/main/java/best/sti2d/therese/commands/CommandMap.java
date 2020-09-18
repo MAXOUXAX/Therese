@@ -27,7 +27,7 @@ public final class CommandMap {
 
     public CommandMap() {
         this.therese = Therese.getInstance();
-        registerCommands(new CommandDefault(this), new CommandEmbed(this), new CommandVersion(this), new HelpCommand(this), new CommandRequest(this));
+        registerCommands(new CommandDefault(this), new CommandEmbed(this), new CommandVersion(this), new HelpCommand(this), new CommandEmploiDuTemps(this));
         loadPower();
     }
 
