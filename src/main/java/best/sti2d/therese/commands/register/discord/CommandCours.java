@@ -3,12 +3,14 @@ package best.sti2d.therese.commands.register.discord;
 import best.sti2d.therese.Therese;
 import best.sti2d.therese.commands.Command;
 import best.sti2d.therese.commands.CommandMap;
+import best.sti2d.therese.pronote.objects.Lesson;
 import best.sti2d.therese.utils.EmbedCrafter;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class CommandCours {
@@ -28,10 +30,20 @@ public class CommandCours {
         } else {
             String[] dateParts = args[0].split("/");
             String formattedDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
-            ArrayList<MessageEmbed> embeds = therese.getPronoteManager().getHelper().getLessonsEmbeds(formattedDate);
-            if (!embeds.isEmpty()) {
-                embeds.forEach(messageEmbed -> {
-                    textChannel.sendMessage(messageEmbed).queue();
+            ArrayList<Lesson> lessons = therese.getPronoteManager().getHelper().getLessons(formattedDate);
+            if (!lessons.isEmpty()) {
+                lessons.forEach(lesson -> {
+                    textChannel.sendMessage(lesson.toEmbed()).queue();
+                    if (!lesson.getFiles().isEmpty()) {
+                        lesson.getFiles().forEach((name, url) -> {
+                            try {
+                                InputStream fileUrl = new URL(name).openStream();
+                                textChannel.sendFile(fileUrl, url).queue();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
                 });
             } else {
                 textChannel.sendMessage(new EmbedCrafter()

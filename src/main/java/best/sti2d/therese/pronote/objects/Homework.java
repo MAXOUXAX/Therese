@@ -1,8 +1,11 @@
 package best.sti2d.therese.pronote.objects;
 
+import best.sti2d.therese.utils.EmbedCrafter;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Homework {
@@ -60,4 +63,16 @@ public class Homework {
     public void setDueTo(Date dueTo) {
         this.dueTo = dueTo;
     }
+
+    public MessageEmbed toEmbed(){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM");
+
+        EmbedCrafter embedCrafter = new EmbedCrafter();
+        embedCrafter.setTitle(getSubject()+" - Pour le "+formatter.format(getDueTo()))
+                .setDescription(getDescription()+"\n" +
+                        "**Donné le**: "+formatter.format(getGivenAt()))
+                .setColor(getColor());
+        return embedCrafter.build();
+    }
+
 }
