@@ -1,8 +1,11 @@
 package best.sti2d.therese.pronote.objects;
 
+import best.sti2d.therese.utils.EmbedCrafter;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.json.JSONObject;
 
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Class {
@@ -100,4 +103,28 @@ public class Class {
     public void setTo(Date to) {
         this.to = to;
     }
+
+    public MessageEmbed toEmbed(){
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+
+        String time = formatter.format(getFrom())+" - "+formatter.format(getTo());
+        EmbedCrafter embedCrafter = new EmbedCrafter();
+        embedCrafter.setTitle(time+" - "+getSubject()+" - "+new SimpleDateFormat("dd/MM").format(getFrom()))
+                .setDescription("**Salle:** "+getRoom()+"\n" +
+                        "**Horaires**: "+formatter.format(getFrom())+" » "+formatter.format(getTo())+"\n" +
+                        "**Professeur**: "+getTeacher()+"\n\n"+
+                        "**Statut**: " + getStatus())
+
+                .setColor(getColor());
+        if(isAway() || isCancelled()) {
+            embedCrafter.setTitle("**" + (isAway() ? "ABSENT" : "ANNULÉ") + "** - ~~" + getSubject() + "~~ - " + new SimpleDateFormat("dd/MM").format(getFrom()))
+                    .setDescription("~~**Salle:** " + getRoom() + "~~\n" +
+                            "~~**Horaires**: " + formatter.format(getFrom()) + " » " + formatter.format(getTo()) + "~~\n" +
+                            "~~**Professeur**: " + getTeacher() + "~~\n\n" +
+                            "**STATUT**: " + getStatus())
+                    .setColor(Color.RED);
+        }
+        return embedCrafter.build();
+    }
+
 }

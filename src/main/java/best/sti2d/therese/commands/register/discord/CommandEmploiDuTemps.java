@@ -3,8 +3,8 @@ package best.sti2d.therese.commands.register.discord;
 import best.sti2d.therese.Therese;
 import best.sti2d.therese.commands.Command;
 import best.sti2d.therese.commands.CommandMap;
+import best.sti2d.therese.pronote.objects.Class;
 import best.sti2d.therese.utils.EmbedCrafter;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
@@ -28,10 +28,10 @@ public class CommandEmploiDuTemps {
         } else {
             String[] dateParts = args[0].split("/");
             String formattedDate = dateParts[2] +"-"+ dateParts[1] +"-"+ dateParts[0];
-            ArrayList<MessageEmbed> embeds = therese.getPronoteManager().getHelper().getClassesEmbeds(formattedDate);
-            if (!embeds.isEmpty()) {
-                embeds.forEach(messageEmbed -> {
-                    textChannel.sendMessage(messageEmbed).queue();
+            ArrayList<Class> classes = therese.getPronoteManager().getHelper().getClasses(formattedDate);
+            if (!classes.isEmpty()) {
+                classes.forEach(currentClass -> {
+                    textChannel.sendMessage(currentClass.toEmbed()).queue();
                 });
             } else {
                 textChannel.sendMessage(new EmbedCrafter()

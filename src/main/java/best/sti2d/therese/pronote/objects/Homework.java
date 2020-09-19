@@ -2,11 +2,13 @@ package best.sti2d.therese.pronote.objects;
 
 import best.sti2d.therese.utils.EmbedCrafter;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Homework {
 
@@ -15,6 +17,7 @@ public class Homework {
     private Color color;
     private Date givenAt;
     private Date dueTo;
+    private HashMap<String, String> files = new HashMap<>();
 
     public Homework(JSONObject element) {
         this.subject = element.getString("subject");
@@ -22,6 +25,11 @@ public class Homework {
         this.color = element.isNull("color") ? Color.WHITE : Color.decode(element.getString("color"));
         this.givenAt = new Date(element.getLong("givenAt"));
         this.dueTo = new Date(element.getLong("for"));
+        JSONArray filesArray = element.getJSONArray("files");
+        filesArray.forEach(o -> {
+            JSONObject jsonObject = (JSONObject) o;
+            files.put(jsonObject.getString("name"), jsonObject.getString("url"));
+        });
     }
 
     public String getSubject() {
@@ -62,6 +70,14 @@ public class Homework {
 
     public void setDueTo(Date dueTo) {
         this.dueTo = dueTo;
+    }
+
+    public HashMap<String, String> getFiles() {
+        return files;
+    }
+
+    public void setFiles(HashMap<String, String> files) {
+        this.files = files;
     }
 
     public MessageEmbed toEmbed(){

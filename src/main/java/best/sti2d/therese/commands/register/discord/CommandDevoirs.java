@@ -33,11 +33,16 @@ public class CommandDevoirs {
             ArrayList<Homework> homeworks = therese.getPronoteManager().getHelper().getHomeworksEmbeds(formattedDate);
             if (!homeworks.isEmpty()) {
                 homeworks.forEach(homework -> {
-                    try {
-                        InputStream file = new URL("https://http.cat/500").openStream();
-                        textChannel.sendFile(file, "cat.png").embed(homework.toEmbed()).queue();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    textChannel.sendMessage(homework.toEmbed()).queue();
+                    if (!homework.getFiles().isEmpty()) {
+                        homework.getFiles().forEach((name, url) -> {
+                            try {
+                                InputStream fileUrl = new URL(name).openStream();
+                                textChannel.sendFile(fileUrl, url).queue();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
                     }
                 });
             } else {
