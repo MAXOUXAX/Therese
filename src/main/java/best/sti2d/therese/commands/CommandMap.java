@@ -32,7 +32,9 @@ public final class CommandMap {
                 new CommandVersion(this),
                 new HelpCommand(this),
                 new CommandEmploiDuTemps(this),
-                new CommandQuery(this));
+                new CommandQuery(this),
+                new CommandDevoirs(this),
+                new CommandCours(this));
         loadPower();
     }
 
