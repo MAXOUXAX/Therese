@@ -40,7 +40,7 @@ public class PronoteHelper {
 
     public ArrayList<Homework> getHomeworksEmbeds(String date) throws IOException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("query", "{homeworks(from: \""+date+"\") {description subject givenAt for color}}");
+        jsonObject.put("query", "{homeworks(from: \""+date+"\") {description subject givenAt for color files{name url}}}");
 
         JSONObject finalObject = pronoteManager.makeRequest("/graphql", jsonObject);
 
@@ -58,7 +58,7 @@ public class PronoteHelper {
 
     public ArrayList<Lesson> getLessons(String date) throws IOException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("query", "{contents(from: \""+date+"\") {from to subject teachers color title description}}");
+        jsonObject.put("query", "{contents(from: \""+date+"\") {from to subject teachers color title description files{name url}}}");
 
         JSONObject finalObject = pronoteManager.makeRequest("/graphql", jsonObject);
 
