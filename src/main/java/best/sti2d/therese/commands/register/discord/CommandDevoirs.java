@@ -37,8 +37,8 @@ public class CommandDevoirs {
                     if (!homework.getFiles().isEmpty()) {
                         homework.getFiles().forEach((name, url) -> {
                             try {
-                                InputStream fileUrl = new URL(name).openStream();
-                                textChannel.sendFile(fileUrl, url).queue();
+                                InputStream fileUrl = new URL(url).openStream();
+                                textChannel.sendFile(fileUrl, name).queue();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
