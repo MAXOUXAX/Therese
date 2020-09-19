@@ -42,8 +42,9 @@ public class PronoteHelper {
 
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
 
+            String time = formatter.format(currentClass.getFrom())+" - "+formatter.format(currentClass.getTo());
             EmbedCrafter embedCrafter = new EmbedCrafter();
-            embedCrafter.setTitle(currentClass.getSubject()+" - "+new SimpleDateFormat("dd/MM").format(currentClass.getFrom()))
+            embedCrafter.setTitle(time+" - "+currentClass.getSubject()+" - "+new SimpleDateFormat("dd/MM").format(currentClass.getFrom()))
                     .setDescription("**Salle:** "+currentClass.getRoom()+"\n" +
                             "**Horaires**: "+formatter.format(currentClass.getFrom())+" » "+formatter.format(currentClass.getTo())+"\n" +
                             "**Professeur**: "+currentClass.getTeacher()+"\n\n"+
