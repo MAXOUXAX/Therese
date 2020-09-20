@@ -3,6 +3,7 @@ package best.sti2d.therese;
 import best.sti2d.therese.commands.CommandMap;
 import best.sti2d.therese.database.DatabaseManager;
 import best.sti2d.therese.listeners.DiscordListener;
+import best.sti2d.therese.monbureaunumerique.MonBureauNumeriqueManager;
 import best.sti2d.therese.pronote.PronoteManager;
 import best.sti2d.therese.utils.ConfigurationManager;
 import best.sti2d.therese.utils.ErrorHandler;
@@ -27,6 +28,7 @@ public class Therese implements Runnable{
     private final Logger logger;
     private final ErrorHandler errorHandler;
     private PronoteManager pronoteManager;
+    private MonBureauNumeriqueManager monBureauNumeriqueManager;
     private final ConfigurationManager configurationManager;
 
     private boolean running;
@@ -59,8 +61,20 @@ public class Therese implements Runnable{
         loadPronote();
         logger.info("> Pronote loaded!");
 
+        loadMbn();
+        logger.info("> Mon bureau numérique loaded!");
+
         logger.info("> The BOT is now good to go !");
         logger.info("--------------- STARTING ---------------");
+    }
+
+    private void loadMbn() {
+        this.monBureauNumeriqueManager = new MonBureauNumeriqueManager();
+        try {
+            monBureauNumeriqueManager.connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadPronote() {
@@ -123,6 +137,8 @@ public class Therese implements Runnable{
         logger.info("> JDA shutdowned!");
         DatabaseManager.closeDatabaseConnection();
         logger.info("> Closed database connection!");
+        pronoteManager.disconnect();
+        logger.info("> Logged out of Pronote!");
         logger.info("--------------- STOPPING ---------------");
         logger.info("Arrêt du BOT réussi");
         System.exit(0);

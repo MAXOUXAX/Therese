@@ -66,6 +66,10 @@
             <name>litarvan</name>
             <url>https://litarvan.github.io/maven</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -109,6 +113,11 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20200518</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.vinceh121</groupId>
+            <artifactId>jkdecole</artifactId>
+            <version>a9377d48e0</version>
         </dependency>
     </dependencies>
 

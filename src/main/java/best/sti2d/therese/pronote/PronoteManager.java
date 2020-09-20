@@ -80,4 +80,12 @@ public class PronoteManager {
     public PronoteHelper getHelper() {
         return pronoteHelper;
     }
+
+    public void disconnect() {
+        try {
+            makeRequest("/auth/logout", new JSONObject());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
