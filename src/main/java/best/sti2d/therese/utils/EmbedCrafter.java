@@ -5,7 +5,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class EmbedCrafter {
         embedBuilder
             .setColor(color)
             .setFooter(therese.getConfigurationManager().getStringValue("embedFooter"), therese.getConfigurationManager().getStringValue("embedIconUrl"))
-            .setTimestamp(LocalDateTime.now());
+            .setTimestamp(OffsetDateTime.now(ZoneId.of("ECT")));
         fields.forEach(embedBuilder::addField);
         if(title != null){
             if(url != null){

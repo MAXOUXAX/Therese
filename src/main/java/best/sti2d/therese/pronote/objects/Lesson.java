@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class Lesson {
 
@@ -106,9 +107,12 @@ public class Lesson {
 
     public MessageEmbed toEmbed(){
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dayMonth = new SimpleDateFormat("dd/MM");
+        formatter.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
+        dayMonth.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
 
         EmbedCrafter embedCrafter = new EmbedCrafter();
-        embedCrafter.setTitle(getSubject()+" - Cours du "+new SimpleDateFormat("dd/MM").format(getFrom()))
+        embedCrafter.setTitle(getSubject()+" - Cours du "+dayMonth.format(getFrom()))
                 .setDescription(getTitle()+"\n\n" +
                         "**Contenu**: "+getDescription()+"\n" +
                         "**Professeur(s)**: "+ ListUtils.listToString(Arrays.stream(getTeachers()).iterator())+"\n" +

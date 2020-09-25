@@ -9,6 +9,7 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class Homework {
 
@@ -84,6 +85,7 @@ public class Homework {
 
     public MessageEmbed toEmbed(){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM");
+        formatter.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
 
         EmbedCrafter embedCrafter = new EmbedCrafter();
         embedCrafter.setTitle(getSubject()+" - Pour le "+formatter.format(getDueTo()))

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Class {
 
@@ -106,10 +107,13 @@ public class Class {
 
     public MessageEmbed toEmbed(){
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dayMonth = new SimpleDateFormat("dd/MM");
+        formatter.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
+        dayMonth.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
 
         String time = formatter.format(getFrom())+" - "+formatter.format(getTo());
         EmbedCrafter embedCrafter = new EmbedCrafter();
-        embedCrafter.setTitle(time+" - "+getSubject()+" - "+new SimpleDateFormat("dd/MM").format(getFrom()))
+        embedCrafter.setTitle(time+" - "+getSubject()+" - "+dayMonth.format(getFrom()))
                 .setDescription("**Salle:** "+getRoom()+"\n" +
                         "**Horaires**: "+formatter.format(getFrom())+" » "+formatter.format(getTo())+"\n" +
                         "**Professeur**: "+getTeacher()+"\n\n"+
@@ -117,7 +121,7 @@ public class Class {
 
                 .setColor(getColor());
         if(isAway() || isCancelled()) {
-            embedCrafter.setTitle("**" + (isAway() ? "ABSENT" : "ANNULÉ") + "** - ~~" + getSubject() + "~~ - " + new SimpleDateFormat("dd/MM").format(  getFrom()))
+            embedCrafter.setTitle("**" + (isAway() ? "ABSENT" : "ANNULÉ") + "** - ~~" + getSubject() + "~~ - " + dayMonth.format(  getFrom()))
                     .setDescription("~~**Salle:** " + getRoom() + "~~\n" +
                             "~~**Horaires**: " + formatter.format(getFrom()) + " » " + formatter.format(getTo()) + "~~\n" +
                             "~~**Professeur**: " + getTeacher() + "~~\n\n" +
