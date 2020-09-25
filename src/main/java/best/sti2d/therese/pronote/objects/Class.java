@@ -117,7 +117,7 @@ public class Class {
 
                 .setColor(getColor());
         if(isAway() || isCancelled()) {
-            embedCrafter.setTitle("**" + (isAway() ? "ABSENT" : "ANNULÉ") + "** - ~~" + getSubject() + "~~ - " + new SimpleDateFormat("dd/MM").format(getFrom()))
+            embedCrafter.setTitle("**" + (isAway() ? "ABSENT" : "ANNULÉ") + "** - ~~" + getSubject() + "~~ - " + new SimpleDateFormat("dd/MM").format(  getFrom()))
                     .setDescription("~~**Salle:** " + getRoom() + "~~\n" +
                             "~~**Horaires**: " + formatter.format(getFrom()) + " » " + formatter.format(getTo()) + "~~\n" +
                             "~~**Professeur**: " + getTeacher() + "~~\n\n" +

@@ -27,15 +27,17 @@ public class Lesson {
         this.subject = element.getString("subject");
         this.title = element.getString("title");
         this.description = element.getString("description");
-        this.teachers = element.getJSONArray("teachers").toList().toArray(new String[0]);;
+        this.teachers = element.getJSONArray("teachers").toList().toArray(new String[0]);
         this.color = element.isNull("color") ? Color.WHITE : Color.decode(element.getString("color"));
         this.from = new Date(element.getLong("from"));
         this.to = new Date(element.getLong("to"));
-        JSONArray filesArray = element.getJSONArray("files");
-        filesArray.forEach(o -> {
-            JSONObject jsonObject = (JSONObject) o;
-            files.put(jsonObject.getString("name"), jsonObject.getString("url"));
-        });
+        if(!element.isNull("files")) {
+            JSONArray filesArray = element.getJSONArray("files");
+            filesArray.forEach(o -> {
+                JSONObject jsonObject = (JSONObject) o;
+                files.put(jsonObject.getString("name"), jsonObject.getString("url"));
+            });
+        }
     }
 
     public String getSubject() {

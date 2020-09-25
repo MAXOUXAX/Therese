@@ -25,11 +25,13 @@ public class Homework {
         this.color = element.isNull("color") ? Color.WHITE : Color.decode(element.getString("color"));
         this.givenAt = new Date(element.getLong("givenAt"));
         this.dueTo = new Date(element.getLong("for"));
-        JSONArray filesArray = element.getJSONArray("files");
-        filesArray.forEach(o -> {
-            JSONObject jsonObject = (JSONObject) o;
-            files.put(jsonObject.getString("name"), jsonObject.getString("url"));
-        });
+        if(!element.isNull("files")) {
+            JSONArray filesArray = element.getJSONArray("files");
+            filesArray.forEach(o -> {
+                JSONObject jsonObject = (JSONObject) o;
+                files.put(jsonObject.getString("name"), jsonObject.getString("url"));
+            });
+        }
     }
 
     public String getSubject() {
