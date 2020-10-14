@@ -100,7 +100,7 @@ public class EmbedCrafter {
         embedBuilder
             .setColor(color)
             .setFooter(therese.getConfigurationManager().getStringValue("embedFooter"), therese.getConfigurationManager().getStringValue("embedIconUrl"))
-            .setTimestamp(OffsetDateTime.now(ZoneId.of("ECT")));
+            .setTimestamp(OffsetDateTime.now(ZoneId.of("Europe/Paris")));
         fields.forEach(embedBuilder::addField);
         if(title != null){
             if(url != null){
