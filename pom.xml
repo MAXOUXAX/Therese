@@ -6,7 +6,7 @@
 
     <groupId>best.sti2d.therese</groupId>
     <artifactId>Therese</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-RELEASE</version>
 
     <build>
         <plugins>
@@ -115,9 +115,14 @@
             <version>20200518</version>
         </dependency>
         <dependency>
-            <groupId>com.github.vinceh121</groupId>
+            <groupId>me.vinceh121</groupId>
             <artifactId>jkdecole</artifactId>
-            <version>a9377d48e0</version>
+            <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.13.1</version>
         </dependency>
     </dependencies>
 

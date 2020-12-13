@@ -1,4 +1,4 @@
-package best.sti2d.therese.pronote.objects;
+package best.sti2d.therese.generic;
 
 import best.sti2d.therese.utils.EmbedCrafter;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -19,20 +19,31 @@ public class Homework {
     private Date givenAt;
     private Date dueTo;
     private HashMap<String, String> files = new HashMap<>();
+    private DataSource source;
 
-    public Homework(JSONObject element) {
-        this.subject = element.getString("subject");
-        this.description = element.getString("description");
-        this.color = element.isNull("color") ? Color.WHITE : Color.decode(element.getString("color"));
-        this.givenAt = new Date(element.getLong("givenAt"));
-        this.dueTo = new Date(element.getLong("for"));
-        if(!element.isNull("files")) {
-            JSONArray filesArray = element.getJSONArray("files");
+    public Homework(me.vinceh121.jkdecole.entities.homework.Homework monBureauNumeriqueData) {
+        this.subject = monBureauNumeriqueData.getSubject()+" | "+monBureauNumeriqueData.getType();
+        this.description = monBureauNumeriqueData.getTitle();
+        this.color = Color.WHITE;
+        this.dueTo = monBureauNumeriqueData.getDate();
+        this.givenAt = monBureauNumeriqueData.getDate();
+        this.source = DataSource.MONBUREAUNUMERIQUE;
+    }
+
+    public Homework(JSONObject pronoteData) {
+        this.subject = pronoteData.getString("subject");
+        this.description = pronoteData.getString("description");
+        this.color = pronoteData.isNull("color") ? Color.WHITE : Color.decode(pronoteData.getString("color"));
+        this.givenAt = new Date(pronoteData.getLong("givenAt"));
+        this.dueTo = new Date(pronoteData.getLong("for"));
+        if(!pronoteData.isNull("files")) {
+            JSONArray filesArray = pronoteData.getJSONArray("files");
             filesArray.forEach(o -> {
                 JSONObject jsonObject = (JSONObject) o;
                 files.put(jsonObject.getString("name"), jsonObject.getString("url"));
             });
         }
+        this.source = DataSource.PRONOTE;
     }
 
     public String getSubject() {
@@ -91,8 +102,12 @@ public class Homework {
         embedCrafter.setTitle(getSubject()+" - Pour le "+formatter.format(getDueTo()))
                 .setDescription(getDescription()+"\n" +
                         "**Donné le**: "+formatter.format(getGivenAt()))
-                .setColor(getColor());
+                .setColor(getColor())
+                .setAuthor(source.getName(), source.getURL(), source.getIconURL());
         return embedCrafter.build();
     }
 
+    public DataSource getSource() {
+        return source;
+    }
 }

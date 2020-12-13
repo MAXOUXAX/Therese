@@ -1,4 +1,4 @@
-package best.sti2d.therese.pronote.objects;
+package best.sti2d.therese.generic;
 
 import best.sti2d.therese.utils.EmbedCrafter;
 import best.sti2d.therese.utils.ListUtils;
@@ -23,6 +23,7 @@ public class Lesson {
     private Date from;
     private Date to;
     private HashMap<String, String> files = new HashMap<>();
+    private DataSource source;
 
     public Lesson(JSONObject element) {
         this.subject = element.getString("subject");
@@ -39,6 +40,7 @@ public class Lesson {
                 files.put(jsonObject.getString("name"), jsonObject.getString("url"));
             });
         }
+        this.source = DataSource.PRONOTE;
     }
 
     public String getSubject() {
@@ -117,8 +119,12 @@ public class Lesson {
                         "**Contenu**: "+getDescription()+"\n" +
                         "**Professeur(s)**: "+ ListUtils.listToString(Arrays.stream(getTeachers()).iterator())+"\n" +
                         "**Horaires**: "+formatter.format(getFrom())+" » "+formatter.format(getTo())+"\n")
-                .setColor(getColor());
+                .setColor(getColor())
+                .setAuthor(source.getName(), source.getURL(), source.getIconURL());
         return embedCrafter.build();
     }
 
+    public DataSource getSource() {
+        return source;
+    }
 }

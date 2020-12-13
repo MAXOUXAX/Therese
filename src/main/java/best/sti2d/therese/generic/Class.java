@@ -1,4 +1,4 @@
-package best.sti2d.therese.pronote.objects;
+package best.sti2d.therese.generic;
 
 import best.sti2d.therese.utils.EmbedCrafter;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -20,17 +20,19 @@ public class Class {
     private boolean isCancelled;
     private Date from;
     private Date to;
+    private DataSource source;
 
-    public Class(JSONObject element) {
-        this.subject = element.getString("subject");
-        this.room = element.isNull("room") ? "-/-" : element.getString("room");
-        this.teacher = element.isNull("teacher") ? "-/-" : element.getString("teacher");
-        this.color = element.isNull("color") ? Color.WHITE : Color.decode(element.getString("color"));
-        this.status = element.isNull("status") ? "-/-" : element.getString("status");
-        this.isAway = !element.isNull("isAway") && element.getBoolean("isAway");
-        this.isCancelled = !element.isNull("isCancelled") && element.getBoolean("isCancelled");
-        this.from = new Date(element.getLong("from"));
-        this.to = new Date(element.getLong("to"));
+    public Class(JSONObject pronoteData) {
+        this.subject = pronoteData.getString("subject");
+        this.room = pronoteData.isNull("room") ? "-/-" : pronoteData.getString("room");
+        this.teacher = pronoteData.isNull("teacher") ? "-/-" : pronoteData.getString("teacher");
+        this.color = pronoteData.isNull("color") ? Color.WHITE : Color.decode(pronoteData.getString("color"));
+        this.status = pronoteData.isNull("status") ? "-/-" : pronoteData.getString("status");
+        this.isAway = !pronoteData.isNull("isAway") && pronoteData.getBoolean("isAway");
+        this.isCancelled = !pronoteData.isNull("isCancelled") && pronoteData.getBoolean("isCancelled");
+        this.from = new Date(pronoteData.getLong("from"));
+        this.to = new Date(pronoteData.getLong("to"));
+        this.source = DataSource.PRONOTE;
     }
 
     public String getSubject() {
@@ -119,16 +121,21 @@ public class Class {
                         "**Professeur**: "+getTeacher()+"\n\n"+
                         "**Statut**: " + getStatus())
 
-                .setColor(getColor());
+                .setColor(getColor())
+                .setAuthor(source.getName(), source.getURL(), source.getIconURL());
         if(isAway() || isCancelled()) {
             embedCrafter.setTitle("**" + (isAway() ? "ABSENT" : "ANNULÉ") + "** - ~~" + getSubject() + "~~ - " + dayMonth.format(  getFrom()))
                     .setDescription("~~**Salle:** " + getRoom() + "~~\n" +
                             "~~**Horaires**: " + formatter.format(getFrom()) + " » " + formatter.format(getTo()) + "~~\n" +
                             "~~**Professeur**: " + getTeacher() + "~~\n\n" +
                             "**STATUT**: " + getStatus())
-                    .setColor(Color.RED);
+                    .setColor(Color.RED)
+                    .setAuthor(source.getName(), source.getURL(), source.getIconURL());
         }
         return embedCrafter.build();
     }
 
+    public DataSource getSource() {
+        return source;
+    }
 }

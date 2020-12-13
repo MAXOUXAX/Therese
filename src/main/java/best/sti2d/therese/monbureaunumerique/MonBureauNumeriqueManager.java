@@ -9,10 +9,12 @@ import java.io.IOException;
 public class MonBureauNumeriqueManager {
 
     private final Therese therese;
+    private final MonBureauNumeriqueHelper monBureauNumeriqueHelper;
     private final JKdecole mbn;
 
     public MonBureauNumeriqueManager() {
         therese = Therese.getInstance();
+        this.monBureauNumeriqueHelper = new MonBureauNumeriqueHelper(this);
         mbn = new JKdecole();
     }
 
@@ -26,5 +28,9 @@ public class MonBureauNumeriqueManager {
 
     public JKdecole getMbn() {
         return mbn;
+    }
+
+    public MonBureauNumeriqueHelper getHelper() {
+        return monBureauNumeriqueHelper;
     }
 }
