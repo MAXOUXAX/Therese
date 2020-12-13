@@ -113,20 +113,18 @@ public class Class {
         formatter.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
         dayMonth.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
 
-        String time = formatter.format(getFrom())+" - "+formatter.format(getTo());
+        String time = formatter.format(getFrom())+" à "+formatter.format(getTo());
         EmbedCrafter embedCrafter = new EmbedCrafter();
-        embedCrafter.setTitle(time+" - "+getSubject()+" - "+dayMonth.format(getFrom()))
+        embedCrafter.setTitle(getSubject()+" - Séance du "+dayMonth.format(getFrom())+" de "+time)
                 .setDescription("**Salle:** "+getRoom()+"\n" +
-                        "**Horaires**: "+formatter.format(getFrom())+" » "+formatter.format(getTo())+"\n" +
                         "**Professeur**: "+getTeacher()+"\n\n"+
                         "**Statut**: " + getStatus())
 
                 .setColor(getColor())
                 .setAuthor(source.getName(), source.getURL(), source.getIconURL());
         if(isAway() || isCancelled()) {
-            embedCrafter.setTitle("**" + (isAway() ? "ABSENT" : "ANNULÉ") + "** - ~~" + getSubject() + "~~ - " + dayMonth.format(  getFrom()))
+            embedCrafter.setTitle("**" + (isAway() ? "ABSENT" : "ANNULÉ") + "** - ~~" + getSubject() + "~~ - Séance du " + dayMonth.format(getFrom())+" de "+time)
                     .setDescription("~~**Salle:** " + getRoom() + "~~\n" +
-                            "~~**Horaires**: " + formatter.format(getFrom()) + " » " + formatter.format(getTo()) + "~~\n" +
                             "~~**Professeur**: " + getTeacher() + "~~\n\n" +
                             "**STATUT**: " + getStatus())
                     .setColor(Color.RED)

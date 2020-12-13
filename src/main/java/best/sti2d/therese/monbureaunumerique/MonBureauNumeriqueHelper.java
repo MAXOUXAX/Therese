@@ -24,12 +24,12 @@ public class MonBureauNumeriqueHelper {
 
     public ArrayList<Homework> getHomeworks(String date) throws ParseException, IOException {
         ArrayList<Homework> homeworks = new ArrayList<>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date dateObj = simpleDateFormat.parse(date);
         Optional<HWDay> hwDayOptional = monBureauNumeriqueManager.getMbn().getAgenda().getDays().stream().filter(hwDay -> isSameDate(dateObj, hwDay.getDate())).findFirst();
         if(hwDayOptional.isPresent()){
             HWDay hwDay = hwDayOptional.get();
-            Arrays.asList(hwDay.getHomeworks()).forEach(homework -> homeworks.add(new Homework(homework)));
+            Arrays.asList(hwDay.getHomeworks()).forEach(homework -> homeworks.add(new Homework(homework, hwDay)));
         }
         return homeworks;
     }

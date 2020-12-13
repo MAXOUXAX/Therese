@@ -114,11 +114,10 @@ public class Lesson {
         dayMonth.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
 
         EmbedCrafter embedCrafter = new EmbedCrafter();
-        embedCrafter.setTitle(getSubject()+" - Cours du "+dayMonth.format(getFrom()))
+        embedCrafter.setTitle(getSubject()+" - Cours du "+dayMonth.format(getFrom())+" de "+formatter.format(getFrom())+" à "+formatter.format(getTo())+"\n")
                 .setDescription(getTitle()+"\n\n" +
-                        "**Contenu**: "+getDescription()+"\n" +
-                        "**Professeur(s)**: "+ ListUtils.listToString(Arrays.stream(getTeachers()).iterator())+"\n" +
-                        "**Horaires**: "+formatter.format(getFrom())+" » "+formatter.format(getTo())+"\n")
+                        "**Contenu**: \n```"+getDescription()+"```\n" +
+                        "**Professeur(s)**: "+ ListUtils.listToString(Arrays.stream(getTeachers()).iterator())+"\n")
                 .setColor(getColor())
                 .setAuthor(source.getName(), source.getURL(), source.getIconURL());
         return embedCrafter.build();

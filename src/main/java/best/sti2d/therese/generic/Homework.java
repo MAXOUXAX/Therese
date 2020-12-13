@@ -1,6 +1,7 @@
 package best.sti2d.therese.generic;
 
 import best.sti2d.therese.utils.EmbedCrafter;
+import me.vinceh121.jkdecole.entities.homework.HWDay;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,11 +22,11 @@ public class Homework {
     private HashMap<String, String> files = new HashMap<>();
     private DataSource source;
 
-    public Homework(me.vinceh121.jkdecole.entities.homework.Homework monBureauNumeriqueData) {
+    public Homework(me.vinceh121.jkdecole.entities.homework.Homework monBureauNumeriqueData, HWDay hwDay) {
         this.subject = monBureauNumeriqueData.getSubject()+" | "+monBureauNumeriqueData.getType();
         this.description = monBureauNumeriqueData.getTitle();
         this.color = Color.WHITE;
-        this.dueTo = monBureauNumeriqueData.getDate();
+        this.dueTo = hwDay.getDate();
         this.givenAt = monBureauNumeriqueData.getDate();
         this.source = DataSource.MONBUREAUNUMERIQUE;
     }
@@ -100,7 +101,7 @@ public class Homework {
 
         EmbedCrafter embedCrafter = new EmbedCrafter();
         embedCrafter.setTitle(getSubject()+" - Pour le "+formatter.format(getDueTo()))
-                .setDescription(getDescription()+"\n" +
+                .setDescription("```"+getDescription()+"```\n\n" +
                         "**Donné le**: "+formatter.format(getGivenAt()))
                 .setColor(getColor())
                 .setAuthor(source.getName(), source.getURL(), source.getIconURL());
