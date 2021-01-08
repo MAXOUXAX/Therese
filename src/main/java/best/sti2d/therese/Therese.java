@@ -2,6 +2,7 @@ package best.sti2d.therese;
 
 import best.sti2d.therese.commands.CommandMap;
 import best.sti2d.therese.database.DatabaseManager;
+import best.sti2d.therese.generic.GenericHelper;
 import best.sti2d.therese.listeners.DiscordListener;
 import best.sti2d.therese.monbureaunumerique.MonBureauNumeriqueManager;
 import best.sti2d.therese.pronote.PronoteManager;
@@ -29,6 +30,7 @@ public class Therese implements Runnable{
     private final ErrorHandler errorHandler;
     private PronoteManager pronoteManager;
     private MonBureauNumeriqueManager monBureauNumeriqueManager;
+    private final GenericHelper genericHelper;
     private final ConfigurationManager configurationManager;
 
     private boolean running;
@@ -63,6 +65,8 @@ public class Therese implements Runnable{
 
         loadMbn();
         logger.info("> Mon bureau numérique loaded!");
+
+        this.genericHelper = new GenericHelper(pronoteManager.getHelper(), monBureauNumeriqueManager.getHelper());
 
         logger.info("> The BOT is now good to go !");
         logger.info("--------------- STARTING ---------------");
@@ -171,5 +175,13 @@ public class Therese implements Runnable{
 
     public PronoteManager getPronoteManager() {
         return pronoteManager;
+    }
+
+    public MonBureauNumeriqueManager getMonBureauNumeriqueManager() {
+        return monBureauNumeriqueManager;
+    }
+
+    public GenericHelper getGenericHelper() {
+        return genericHelper;
     }
 }

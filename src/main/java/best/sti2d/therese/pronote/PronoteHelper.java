@@ -1,9 +1,9 @@
 package best.sti2d.therese.pronote;
 
 import best.sti2d.therese.Therese;
-import best.sti2d.therese.pronote.objects.Class;
-import best.sti2d.therese.pronote.objects.Homework;
-import best.sti2d.therese.pronote.objects.Lesson;
+import best.sti2d.therese.generic.Class;
+import best.sti2d.therese.generic.Homework;
+import best.sti2d.therese.generic.Lesson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,7 +38,7 @@ public class PronoteHelper {
         return classes;
     }
 
-    public ArrayList<Homework> getHomeworksEmbeds(String date) throws IOException {
+    public ArrayList<Homework> getHomeworks(String date) throws IOException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("query", "{homeworks(from: \""+date+"\") {description subject givenAt for color files{name url}}}");
 

@@ -3,7 +3,7 @@ package best.sti2d.therese.commands.register.discord;
 import best.sti2d.therese.Therese;
 import best.sti2d.therese.commands.Command;
 import best.sti2d.therese.commands.CommandMap;
-import best.sti2d.therese.pronote.objects.Lesson;
+import best.sti2d.therese.generic.Lesson;
 import best.sti2d.therese.utils.EmbedCrafter;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -30,7 +30,7 @@ public class CommandCours {
         } else {
             String[] dateParts = args[0].split("/");
             String formattedDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
-            ArrayList<Lesson> lessons = therese.getPronoteManager().getHelper().getLessons(formattedDate);
+            ArrayList<Lesson> lessons = therese.getGenericHelper().getLessons(formattedDate);
             if (!lessons.isEmpty()) {
                 lessons.forEach(lesson -> {
                     textChannel.sendMessage(lesson.toEmbed()).queue();
